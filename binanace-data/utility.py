@@ -40,7 +40,7 @@ def download_file(base_path, file_name, date_range=None, folder=None):
   
   # make the directory
   if not os.path.exists(base_path):
-    Path(get_destination_dir(os.path.join("../",base_path))).mkdir(parents=True, exist_ok=True)
+    Path(get_destination_dir(base_path)).mkdir(parents=True, exist_ok=True)
 
   try:
     download_url = get_download_url(download_path)
