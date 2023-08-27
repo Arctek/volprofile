@@ -28,11 +28,9 @@ def get_all_symbols(type):
 
 def download_file(base_path, file_name, date_range=None, folder=None):
   download_path = "{}{}".format(base_path, file_name)
+  base_path = os.path.join("../",base_path)
   if folder:
     base_path = os.path.join(folder, base_path)
-  if date_range:
-    date_range = date_range.replace(" ","_")
-    base_path = os.path.join(base_path, date_range)
   save_path = get_destination_dir(os.path.join(base_path, file_name), folder)
   
 
@@ -42,7 +40,7 @@ def download_file(base_path, file_name, date_range=None, folder=None):
   
   # make the directory
   if not os.path.exists(base_path):
-    Path(get_destination_dir(base_path)).mkdir(parents=True, exist_ok=True)
+    Path(get_destination_dir(os.path.join("../",base_path))).mkdir(parents=True, exist_ok=True)
 
   try:
     download_url = get_download_url(download_path)
@@ -106,10 +104,7 @@ def get_path(trading_type, market_data_type, time_period, symbol, interval=None)
   trading_type_path = 'data/spot'
   if trading_type != 'spot':
     trading_type_path = f'data/futures/{trading_type}'
-  if interval is not None:
-    path = f'{trading_type_path}/{time_period}/{market_data_type}/{symbol.upper()}/{interval}/'
-  else:
-    path = f'{trading_type_path}/{time_period}/{market_data_type}/{symbol.upper()}/'
+  path = f'{trading_type_path}/{time_period}/{market_data_type}/{symbol.upper()}/'
   return path
 
 def get_parser(parser_type):
