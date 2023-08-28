@@ -7,7 +7,7 @@ This is a simple script that generates an accurate volume profile based on Binan
 Before starting to use the indicator, download your desired amount of data. The command below obtains the aggregate trades for July 2023
 
 ```python
-python3 binanace-data/download-aggTrade.py -s BTCUSDT -startDate 2023-07-01 -endDate 2023-07-31  -t spot -skip-monthly 1
+python3 binance-data/download-aggTrade.py -s BTCUSDT -startDate 2023-07-01 -endDate 2023-07-31  -t spot -skip-monthly 1
 ```
 
 ## Getting Started
