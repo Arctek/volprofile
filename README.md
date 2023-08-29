@@ -37,4 +37,4 @@ Next, the bin with the most volume is obtained, also called Point of Control (Po
 
 3. Bin size: `bin_size = 12`
 
-All bins are made standarised and made equal.
+All bins are standarised and made equal.
