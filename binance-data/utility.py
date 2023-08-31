@@ -104,7 +104,10 @@ def get_path(trading_type, market_data_type, time_period, symbol, interval=None)
   trading_type_path = 'data/spot'
   if trading_type != 'spot':
     trading_type_path = f'data/futures/{trading_type}'
-  path = f'{trading_type_path}/{time_period}/{market_data_type}/{symbol.upper()}/'
+  if interval is not None:
+    path = f'{trading_type_path}/{time_period}/{market_data_type}/{symbol.upper()}/{interval}/'
+  else:
+    path = f'{trading_type_path}/{time_period}/{market_data_type}/{symbol.upper()}/'
   return path
 
 def get_parser(parser_type):
