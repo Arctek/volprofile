@@ -41,7 +41,7 @@ if __name__=="__main__":
     #create a list of dictionaries with date and poc
     poc_list = []
     for date in dates:
-        poc_list.append({'date':date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),'poc':create_point_of_control_from_dataframe(df[df["date"] == date])})
+        poc_list.append({'date':date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),'npoc':create_point_of_control_from_dataframe(df[df["date"] == date])})
     #save the list of dictionaries to a json file    
     with open('poclist.json', 'w') as f:
         json.dump(poc_list, f)
