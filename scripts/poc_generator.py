@@ -6,7 +6,8 @@ from zipfile import ZipFile
 import math
 import json
 from itertools import chain
-
+import sys
+import os
 
 def create_volume_profile_ticks_standard(data, num_bins=0, bin_size=0):
     # Calculate the price range for binning
@@ -114,33 +115,51 @@ def create_point_of_control_from_dataframe(data):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(ZipFile("../data/spot/monthly/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2022-03.zip").open("BTCUSDT-aggTrades-2022-03.csv"),
-                     names=["aggregated_id", "price", "quantity", "first_trade_id", "last_trade_id", "last_timestamp", "is_buyer_maker", "is_best_match"])
-    # convert to datetime object from int
-    df["datetime_object"] = pd.to_datetime(df['last_timestamp'], unit='ms')
-    # convert to date object
-    df["date"] = df["datetime_object"].dt.date
-    # take the unique dates
-    dates = df["date"].unique()
-    # create a list of dictionaries with date and poc
-    poc_list = []
-    for date in dates:
+    
+    in_arr = sys.argv
+    if '-y' not in in_arr  or '-m' not in in_arr:
+        print (__doc__)
+        raise NameError('error: -y and -m are required. -y for year and -m for month')
+    else:
+        year = in_arr[in_arr.index('-y') + 1]
+        month = in_arr[in_arr.index('-m') + 1].zfill(2)
+    
+    os.makedirs(os.path.dirname("../data/poclist/"),exist_ok=True)
+    
+    if not os.path.isfile(f'../data/poclist/poclist-{year}-{month}.json'):
+        
+        
+        df = pd.read_csv(ZipFile(f"../data/spot/monthly/aggTrades/BTCUSDT/BTCUSDT-aggTrades-{year}-{month}.zip").open(f"BTCUSDT-aggTrades-{year}-{month}.csv"),
+                         names=["aggregated_id", "price", "quantity", "first_trade_id", "last_trade_id", "last_timestamp", "is_buyer_maker", "is_best_match"])
+        # convert to datetime object from int
+        df["datetime_object"] = pd.to_datetime(df['last_timestamp'], unit='ms')
+        # convert to date object
+        df["date"] = df["datetime_object"].dt.date
+        # take the unique dates
+        dates = df["date"].unique()
+        # create a list of dictionaries with date and poc
+        poc_list = []
+        for date in dates:
 
-        print(date)
+            print(date)
 
-        df_process = df[df["date"] == date].copy()
+            df_process = df[df["date"] == date].copy()
 
-        bins, volume_profile = create_volume_profile_ticks_standard(df_process)
+            bins, volume_profile = create_volume_profile_ticks_standard(df_process)
 
-        # Calculate the Value Area (using the function with dual bins)
-        percentage = 68
+            # Calculate the Value Area (using the function with dual bins)
+            percentage = 68
 
-        value_area_low, value_area_high = calculate_value_area_with_highest_dual_bins(
-            bins, volume_profile, percentage)
+            value_area_low, value_area_high = calculate_value_area_with_highest_dual_bins(
+                bins, volume_profile, percentage)
 
-        poc_list.append({'date': date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                        'npoc': create_point_of_control_from_dataframe(df_process), 'vah': value_area_high, 'val': value_area_low})
-
-    # save the list of dictionaries to a json file
-    with open('poclist.json', 'w') as f:
-        json.dump(poc_list, f)
+            poc_list.append({'date': date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
+                            'npoc': create_point_of_control_from_dataframe(df_process), 'vah': value_area_high, 'val': value_area_low})
+            
+        
+        
+        # save the list of dictionaries to a json file
+        with open(f"../data/poclist/poclist-{year}-{month}.json", 'w') as f:
+            json.dump(poc_list, f)
+    else:
+        print(f'file already exists! ../data/poclist/poclist-{year}-{month}.json')
