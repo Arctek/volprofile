@@ -114,7 +114,7 @@ def create_point_of_control_from_dataframe(data):
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(ZipFile("../data/spot/monthly/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2023-06.zip").open("BTCUSDT-aggTrades-2023-06.csv"),
+    df = pd.read_csv(ZipFile("../data/spot/monthly/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2022-03.zip").open("BTCUSDT-aggTrades-2022-03.csv"),
                      names=["aggregated_id", "price", "quantity", "first_trade_id", "last_trade_id", "last_timestamp", "is_buyer_maker", "is_best_match"])
     # convert to datetime object from int
     df["datetime_object"] = pd.to_datetime(df['last_timestamp'], unit='ms')
