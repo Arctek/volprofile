@@ -143,9 +143,7 @@ if __name__ == "__main__":
 
             print(date)
 
-            df_process = df[df["date"] == date].copy()
-
-            bins, volume_profile = create_volume_profile_ticks_standard(df_process)
+            bins, volume_profile = create_volume_profile_ticks_standard(df[df["date"] == date])
 
             # Calculate the Value Area (using the function with dual bins)
             percentage = 68
@@ -154,7 +152,7 @@ if __name__ == "__main__":
                 bins, volume_profile, percentage)
 
             poc_list.append({'date': date.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
-                            'npoc': create_point_of_control_from_dataframe(df_process), 'vah': value_area_high, 'val': value_area_low})
+                            'npoc': create_point_of_control_from_dataframe(df[df["date"] == date]), 'vah': value_area_high, 'val': value_area_low})
             
         
         
